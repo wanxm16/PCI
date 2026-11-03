@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.vite/
+# 需求文档仅保留在本地
+*.docx
