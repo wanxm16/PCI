@@ -42,6 +42,13 @@ npm install
 npm run dev      # 打开 http://localhost:7321
 ```
 
+也可以在仓库根目录用脚本后台启动和停止（首次运行会自动安装依赖，日志写到 `.dev.log`）：
+
+```bash
+./start.sh       # 后台启动，打开 http://localhost:7321
+./stop.sh        # 停止
+```
+
 其他命令：`npm test`（运行测试，锁定演示数字与规则）、`npm run build`（类型检查并构建）。
 
 右上角可以切换演示角色（经营负责人 / 区域业务人员），点"重置"恢复初始数据。演示主线、页面说明、业务口径和目录结构见 **[demo/README.md](./demo/README.md)**。

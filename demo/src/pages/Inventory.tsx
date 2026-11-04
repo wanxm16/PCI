@@ -192,10 +192,8 @@ export default function Inventory() {
         </Col>
       </Row>
 
-      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
-        { key: 'list', label: <span className="seg-label">库存明细<b>{stats.skus}</b></span>, children: <>
       <div className="panel">
-        <Form form={form} layout="inline" className="filter-form" initialValues={{ window: 90 }} onFinish={search}>
+        <Form form={form} layout="inline" className="filter-form" initialValues={{ window: 90 }} onFinish={v => { search(v); setMainTab('list'); }}>
           <Form.Item name="sku" label="药品"><Input allowClear placeholder="名称/首拼/编码" /></Form.Item>
           <Form.Item name="warehouse" label="仓库"><Select allowClear placeholder="全部仓库" options={whOpts} /></Form.Item>
           <Form.Item name="expState" label="效期状态"><Select allowClear placeholder="全部" options={['已过期', '临期', '正常', '未知'].map(v => ({ value: v }))} /></Form.Item>
@@ -208,11 +206,13 @@ export default function Inventory() {
           </>}
           <Space>
             <Button type="link" onClick={() => setAdv(!adv)}>{adv ? <>收起 <UpOutlined /></> : <>更多筛选 <DownOutlined /></>}</Button>
-            <Button onClick={() => { form.resetFields(); search({ window: 90 }); }}>重置</Button>
+            <Button onClick={() => { form.resetFields(); search({ window: 90 }); setMainTab('list'); }}>重置</Button>
             <Button type="primary" htmlType="submit">搜索</Button>
           </Space>
         </Form>
       </div>
+      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
+        { key: 'list', label: <span className="seg-label">库存明细<b>{stats.skus}</b></span>, children: <>
       <div className="panel">
         <div className="inv-bar">
           <Segmented value={tab} onChange={v => setTab(v as 'sku' | 'batch')} options={[

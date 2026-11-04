@@ -5,3 +5,6 @@ dist/
 .vite/
 # 需求文档仅保留在本地
 *.docx
+*.tsbuildinfo
+.dev.pid
+.dev.log

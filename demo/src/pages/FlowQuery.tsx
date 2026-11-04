@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tabs, Tag, Typography } from 'antd';
-import { DownOutlined, UpOutlined, RobotOutlined } from '@ant-design/icons';
+import { Alert, Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tabs, Tag, Tooltip, Typography } from 'antd';
+import { DownOutlined, UpOutlined, RobotOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { custMap, fmtMoney, makeMeta, matchCustomer, matchSku, scopedFlows, skuMap, whMap, type QueryMeta } from '../data/query';
@@ -119,8 +119,11 @@ export default function FlowQuery({ kind }: { kind: Kind }) {
 
   return (
     <div>
-      <PageTitle title={cfg.title} />
-      {kind === 'sales' && <Alert style={{ marginBottom: 12 }} type="warning" showIcon message={`数据质量：8月文件导入发现 ${duplicateConflicts.length} 条重复记录（同来源+同来源明细ID），已按幂等规则去重，未计入统计。`} description={duplicateConflicts.map(d => `${d.source_id}/${d.source_line_id} ${d.doc_no}`).join('；')} />}
+      <PageTitle title={cfg.title} extra={kind === 'sales' && (
+        <Tooltip title={<>8月文件导入发现 {duplicateConflicts.length} 条重复记录（同来源+同来源明细ID），已按幂等规则去重，未计入统计。<br />{duplicateConflicts.map(d => `${d.source_id}/${d.source_line_id} ${d.doc_no}`).join('；')}</>}>
+          <Tag bordered={false} color="warning" icon={<InfoCircleOutlined />} style={{ cursor: 'help' }}>已去重 {duplicateConflicts.length} 条重复导入</Tag>
+        </Tooltip>
+      )} />
       <div className="panel">
         <Form form={form} className="filter-form" onFinish={search} initialValues={defaults}>
           <Row gutter={12}>

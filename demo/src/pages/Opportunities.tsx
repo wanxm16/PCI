@@ -72,7 +72,7 @@ export default function Opportunities() {
   return (
     <div>
       <PageTitle title="招商进度管理" extra={<Button type="primary" icon={<PlusOutlined />} onClick={() => setCreating(true)}>新增机会</Button>} />
-      <Row gutter={12} style={{ marginBottom: 12 }}>
+      <Row gutter={10} style={{ marginBottom: 10 }}>
         {[
           { t: '进行中机会数', v: stats.active, d: '口径：当前阶段非"合作确认/关闭"', f: {} },
           { t: '本期新增机会数', v: stats.newly, d: `口径：创建日期 ${from30} 至 ${DEMO_DATE}`, f: { created: [dayjs(from30), dayjs(DEMO_DATE)] } },
@@ -84,10 +84,8 @@ export default function Opportunities() {
           </Card></Col>
         ))}
       </Row>
-      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
-        { key: 'list', label: <span className="seg-label">机会列表<b>{data.length}</b></span>, children: <>
       <div className="panel">
-        <Form form={form} layout="inline" className="filter-form" onFinish={search}>
+        <Form form={form} layout="inline" className="filter-form" onFinish={v => { search(v); setMainTab('list'); }}>
           <Form.Item name="kw" label="机会"><Input allowClear placeholder="名称/编号" style={{ width: 140 }} /></Form.Item>
           <Form.Item name="catalogue" label="招商品种"><Select allowClear style={{ width: 200 }} options={catalogue.map(c => ({ value: c.catalogue_id, label: c.name }))} /></Form.Item>
           <Form.Item name="partner" label="意向合伙人"><Select allowClear style={{ width: 180 }} options={partners.map(p => ({ value: p.partner_id, label: p.name }))} /></Form.Item>
@@ -98,9 +96,11 @@ export default function Opportunities() {
           <Form.Item name="created" label="创建日期"><DatePicker.RangePicker /></Form.Item>
           <Form.Item name="lastFollow" label="最近跟进"><DatePicker.RangePicker /></Form.Item>
           <Form.Item name="overdue" valuePropName="checked"><Checkbox>仅下次跟进逾期</Checkbox></Form.Item>
-          <Space><Button type="primary" htmlType="submit">搜索</Button><Button onClick={() => { form.resetFields(); search({}); }}>重置</Button></Space>
+          <Space><Button type="primary" htmlType="submit">搜索</Button><Button onClick={() => { form.resetFields(); search({}); setMainTab('list'); }}>重置</Button></Space>
         </Form>
       </div>
+      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
+        { key: 'list', label: <span className="seg-label">机会列表<b>{data.length}</b></span>, children: <>
       <div className="panel">
         <MetaBar meta={meta} extra={<Segmented size="small" value={view} onChange={v => setView(v as any)} options={['列表', '看板']} />} />
         {view === '列表' ? (

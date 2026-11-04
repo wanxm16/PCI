@@ -63,15 +63,13 @@ export default function Authorizations() {
   return (
     <div>
       <PageTitle title="合伙人授权" extra={<Button type="primary" icon={<PlusOutlined />} onClick={() => setEditing({ mode: 'new' })}>新增授权草稿</Button>} />
-      <Row gutter={12} style={{ marginBottom: 12 }}>
+      <Row gutter={10} style={{ marginBottom: 10 }}>
         <Col span={8}><Card size="small" className="clickable" onClick={() => { form.setFieldsValue({ biz: '生效中' }); search({ biz: '生效中' }); setMainTab('list'); }}><Statistic title="生效中授权数" value={stats.active} /></Card></Col>
         <Col span={8}><Card size="small" className="clickable" onClick={() => { form.setFieldsValue({ biz: '生效中' }); search({ biz: '生效中' }); setMainTab('list'); }}><Statistic title="未来30天内到期数（演示阈值）" value={stats.expiring} valueStyle={{ color: '#d48806' }} /></Card></Col>
         <Col span={8}><Card size="small" className="clickable" onClick={() => { form.setFieldsValue({ review: '待确认' }); search({ review: '待确认' }); setMainTab('list'); }}><Statistic title="待确认数" value={stats.pending} /></Card></Col>
       </Row>
-      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
-        { key: 'list', label: <span className="seg-label">授权列表<b>{data.length}</b></span>, children: <>
       <div className="panel">
-        <Form form={form} layout="inline" className="filter-form" onFinish={search}>
+        <Form form={form} layout="inline" className="filter-form" onFinish={v => { search(v); setMainTab('list'); }}>
           <Form.Item name="kw" label="编号"><Input allowClear placeholder="授权编号/关联机会" style={{ width: 150 }} /></Form.Item>
           <Form.Item name="partner" label="合伙人"><Select allowClear style={{ width: 180 }} options={partners.map(p => ({ value: p.partner_id, label: p.name }))} /></Form.Item>
           <Form.Item name="catalogue" label="招商品种"><Select allowClear style={{ width: 200 }} options={catalogue.map(c => ({ value: c.catalogue_id, label: c.name }))} /></Form.Item>
@@ -81,9 +79,11 @@ export default function Authorizations() {
           <Form.Item name="biz" label="业务状态"><Select allowClear style={{ width: 100 }} options={['未生效', '生效中', '已暂停', '已到期', '已终止'].map(v => ({ value: v }))} /></Form.Item>
           <Form.Item name="validOn" label="在该日有效"><DatePicker /></Form.Item>
           <Form.Item name="owner" label="负责人"><Select allowClear style={{ width: 90 }} options={PEOPLE.map(v => ({ value: v }))} /></Form.Item>
-          <Space><Button type="primary" htmlType="submit">搜索</Button><Button onClick={() => { form.resetFields(); search({}); }}>重置</Button></Space>
+          <Space><Button type="primary" htmlType="submit">搜索</Button><Button onClick={() => { form.resetFields(); search({}); setMainTab('list'); }}>重置</Button></Space>
         </Form>
       </div>
+      <Tabs className="page-main-tabs" activeKey={mainTab} onChange={k => setMainTab(k as any)} items={[
+        { key: 'list', label: <span className="seg-label">授权列表<b>{data.length}</b></span>, children: <>
       <div className="panel">
         <MetaBar meta={meta} />
         <ResultTable<Authorization> rowKey="authorization_id" data={data} meta={meta} exportName="合伙人授权"
